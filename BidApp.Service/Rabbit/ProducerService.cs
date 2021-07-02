@@ -20,7 +20,7 @@ namespace BidApp.Service.Rabbit
         {
             try
             {
-                var factory = new ConnectionFactory() { HostName = "localhost:1572" };
+                var factory = new ConnectionFactory() { HostName = "localhost" };
                 using (var connection = factory.CreateConnection())
                 {
                     using (var channel = connection.CreateModel())

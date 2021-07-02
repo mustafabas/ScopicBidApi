@@ -16,15 +16,9 @@ namespace BidApp.DataL
 
         public BidAppContext(DbContextOptions<BidAppContext> options) : base(options)
         {
-            // this.ChangeTracker.LazyLoadingEnabled = false; lazy loading enabled false
+             this.ChangeTracker.LazyLoadingEnabled = true; 
         }
 
-
-
-
-        //public DbSet<User> User { get; set; }
-        ////public DbSet<Password> Password { get; set; }
-        //public DbSet<Event> Event { get; set; }
         #region Utilities
 
         /// <summary>

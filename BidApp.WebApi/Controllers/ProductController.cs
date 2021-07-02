@@ -1,4 +1,7 @@
 ﻿using BidApp.Service.Products;
+using BidApp.Service.Users;
+using BidApp.WebApi.Models;
+using BidApp.WebApi.Models.Products;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,17 +16,74 @@ namespace BidApp.WebApi.Controllers
     public class ProductController : ControllerBase
     {
         readonly IProductService _productService;
+        readonly IUserService _userService;
 
-        public ProductController(IProductService productService)
+
+        public ProductController(IProductService productService, IUserService userService)
         {
             _productService = productService;
+            _userService = userService;
         }
-        [HttpGet("act")]
-        public IActionResult act()
+        [HttpGet("[action]")]
+        public IActionResult getAll()
         {
-          var products= _productService.GetProducts();
-
-            return Ok(products);
+            ResponseModel<List<ProductApiResponse>> responseModel = new ResponseModel<List<ProductApiResponse>>();
+            List<ProductApiResponse> productList = new List<ProductApiResponse>();
+            var products = _productService.GetProducts();
+            foreach (var product in products)
+            {
+                productList.Add(new ProductApiResponse
+                {
+                    Description = product.Description,
+                    Name = product.Name,
+                    PhotoPath = product.PhotoPath,
+                    StartPrice = product.StartPrice,
+                    Id = product.Id,
+                    ExpireDateTime =product.ExpireDateTime
+                });
+            }
+            responseModel.SetOk(productList);
+            return Ok(responseModel);
         }
+
+        [HttpGet]
+        public IActionResult get(int id)
+        {
+            ResponseModel<ProductDetailApiResponse> response = new ResponseModel<ProductDetailApiResponse>();
+
+            var product = _productService.GetProductById(id);
+            if (product == null)
+            {
+                response.Message = "Product Not Found";
+                response.SetNok();
+            }
+            else
+            {
+                ProductDetailApiResponse productDetail = new ProductDetailApiResponse();
+                productDetail.Id = product.Id;
+                productDetail.Description = product.Description;
+                productDetail.Name = product.Name;
+                productDetail.PhotoPath = product.PhotoPath;
+                productDetail.StartPrice = product.StartPrice;
+                productDetail.ExpireDateTime = product.ExpireDateTime;
+                foreach (var item in product.ProductBids)
+                {
+                    productDetail.ProductBidResponses.Add(new ProductBidResponse
+                    {
+                        Price = item.Offer,
+                        UserName = _userService.GetUserById(item.UserId).userName,
+                        RecordDate = item.RecordDate,
+                        UserId=item.UserId
+                    });
+    
+                }
+                response.SetOk(productDetail);
+             
+            }
+
+            return Ok(response);
+
+        }
+
     }
 }

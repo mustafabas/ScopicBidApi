@@ -9,16 +9,25 @@ namespace BidApp.Service.Products
 {
     public class ProductService:IProductService
     {
-       readonly IRepository<Product> _productRepository;
+       readonly IRepository<ProductEntity> _productRepository;
 
-        public ProductService(IRepository<Product> productRepository)
+        public ProductService(IRepository<ProductEntity> productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public List<Product> GetProducts()
+        public ProductEntity GetProductById(int id)
+        {
+            
+            var query = _productRepository.GetById(id);
+            
+            return query;
+        }
+
+        public List<ProductEntity> GetProducts()
         {
             var query = _productRepository.ListAll();
+     
             return query.ToList();
         }
     }

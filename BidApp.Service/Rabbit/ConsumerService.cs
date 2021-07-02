@@ -25,7 +25,7 @@ namespace BidApp.Service.Rabbit
         {
             try
             {
-                _factory = new ConnectionFactory() { HostName = "localhost:1572" };
+                _factory = new ConnectionFactory() { HostName = "localhost" };
                 _connection = _factory.CreateConnection();
                 _channel = _connection.CreateModel();
 
@@ -49,7 +49,6 @@ namespace BidApp.Service.Rabbit
                         if (messages == null) messages = new Dictionary<string, int>();
 
                         Console.WriteLine(" [x] Received {0}", message);
-                        Thread.Sleep(3000);
 
                         messages.Remove(message);
                         _memoryCache.Set<Dictionary<string, int>>("messages", messages);

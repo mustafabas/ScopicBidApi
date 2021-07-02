@@ -7,6 +7,8 @@ namespace BidApp.Service.Products
 {
     public interface IProductService
     {
-        List<Product> GetProducts();
+        List<ProductEntity> GetProducts();
+
+        ProductEntity GetProductById(int id);
     }
 }

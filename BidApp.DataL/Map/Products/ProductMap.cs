@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BidApp.DataL.Map.Products
 {
-   public class ProductMap:EntityTypeConfiguration<Product>
+   public class ProductMap:EntityTypeConfiguration<ProductEntity>
     {
-        public override void Configure(EntityTypeBuilder<Product> builder)
+        public override void Configure(EntityTypeBuilder<ProductEntity> builder)
         {
-            builder.ToTable<Product>("Product");
+            builder.ToTable<ProductEntity>("Product");
             builder.HasKey(x => x.Id);
             base.Configure(builder);
 
