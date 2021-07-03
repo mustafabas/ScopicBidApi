@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidApp.Service", "BidApp.Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidApp.WebApi", "BidApp.WebApi\BidApp.WebApi.csproj", "{589C5C19-6733-4C05-AFA0-6ACB36B9D803}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidApp.Service.Test", "BidApp.Service.Test\BidApp.Service.Test.csproj", "{835EEB17-F61D-4935-8846-25FB6B4DB3B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{589C5C19-6733-4C05-AFA0-6ACB36B9D803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{589C5C19-6733-4C05-AFA0-6ACB36B9D803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{589C5C19-6733-4C05-AFA0-6ACB36B9D803}.Release|Any CPU.Build.0 = Release|Any CPU
+		{835EEB17-F61D-4935-8846-25FB6B4DB3B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{835EEB17-F61D-4935-8846-25FB6B4DB3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{835EEB17-F61D-4935-8846-25FB6B4DB3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{835EEB17-F61D-4935-8846-25FB6B4DB3B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
