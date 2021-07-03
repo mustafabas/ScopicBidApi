@@ -24,14 +24,45 @@ namespace BidApp.WebApi.Controllers
         public IActionResult login([FromBody] LoginModel login)
         {
             ResponseModel<UserModel> response = new ResponseModel<UserModel>();
-            var user = _userService.getUserByName(login.UserName);
-
+            var user = _userService.GetByUserNameAndPassword(login.UserName, login.Password);
             if (user != null)
-                response.SetOk(user);
-
+            {
+                UserModel userModel = new UserModel { userId = user.Id, userName = user.UserName };
+                response.SetOk(userModel);
+            }     
             else
+            {
                 response.SetNok();
+            }
+            return Ok(response);
+        }
+        [HttpPut("{id:int}")]
+        public IActionResult put(int id, [FromBody] AmuntModel amount)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            var user = _userService.GetUserById(id);
+            user.MaxAmount =Convert.ToDecimal(amount.Amount);
+            _userService.UpdateUser(user);
+            response.SetOk(true);
+            return Ok(response);
 
+        }
+        [HttpGet]
+
+        [HttpGet]
+        public IActionResult get(int id)
+        {
+            ResponseModel<UserModel> response = new ResponseModel<UserModel>();
+            var user = _userService.GetUserById(id);
+            if (user != null)
+            {
+                UserModel userModel = new UserModel { userId = user.Id, userName = user.UserName,MaxAmount= Convert.ToInt32(user.MaxAmount)};
+                response.SetOk(userModel);
+            }
+            else
+            {
+                response.SetNok();
+            }
             return Ok(response);
         }
     }

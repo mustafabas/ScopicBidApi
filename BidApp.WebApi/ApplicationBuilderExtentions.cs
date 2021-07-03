@@ -18,8 +18,6 @@ namespace BidApp.WebApi
 
             life.ApplicationStarted.Register(OnStarted);
 
-            //press Ctrl+C to reproduce if your app runs in Kestrel as a console app
-            //life.ApplicationStopping.Register(OnStopping);
 
             return app;
         }

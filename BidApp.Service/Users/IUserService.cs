@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BidApp.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,8 +7,10 @@ namespace BidApp.Service.Users
 {
     public interface IUserService
     {
-        UserModel GetUserById(int id);
-        UserModel getUserByName(string userName);
+        UserEntity GetUserById(int id);
+        UserEntity GetByUserNameAndPassword(string userName, string password);
+
+        UserEntity UpdateUser(UserEntity user);
 
     }
 }

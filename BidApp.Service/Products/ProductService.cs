@@ -26,9 +26,15 @@ namespace BidApp.Service.Products
 
         public List<ProductEntity> GetProducts()
         {
-            var query = _productRepository.ListAll();
+            var query = _productRepository.ListAll().OrderByDescending(x=>x.StartPrice);
      
             return query.ToList();
+        }
+
+        public ProductEntity UpdateProduct(ProductEntity productEntity)
+        {
+            _productRepository.Update(productEntity);
+            return productEntity;
         }
     }
 

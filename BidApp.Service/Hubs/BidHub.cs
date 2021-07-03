@@ -1,7 +1,10 @@
 ﻿using BidApp.Entities;
 using BidApp.Service.Hubs;
 using BidApp.Service.Products;
+using BidApp.Service.Rabbit;
+using BidApp.Service.Users;
 using Microsoft.AspNetCore.SignalR;
+using Nancy.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,19 +16,18 @@ namespace BidApp.Service.Hubs
     {
         readonly IProductBidService _productBidService;
 
+         readonly IProducerService _producer;
 
-        
-        public BidHub(IProductBidService productBidService)
+        readonly IUserService _userService;
+
+        public BidHub(IProductBidService productBidService, IProducerService producer, IUserService userService)
         {
             this._productBidService = productBidService;
+            this._producer = producer;
+            this._userService = userService;
         }
 
 
-        public async Task SendMqMessage(List<string> messages)
-        {
-            await Clients.All.SendAsync("ReceiveMQMessage", messages);
-    
-        }
 
 
         public async Task AddToGroup(string groupName)
@@ -34,17 +36,45 @@ namespace BidApp.Service.Hubs
         }
         public async Task GroupSendMessage(string groupName, string message)
         {
+            MessageModel messageModel = new JavaScriptSerializer().Deserialize<MessageModel>(message);
 
-            await Clients.Group(groupName).SendAsync("ReceiveMessage", message);
-            string[] messages = message.Split("-");
-            string[] userInfos = messages[0].Split(":");
+            if (messageModel.ExpireDate > DateTime.Now)
+            {
+        
+                var user = _userService.GetUserById(messageModel.UserId);
+                var sumOther = _productBidService.GetSumOfferByUserId(messageModel.UserId, messageModel.ProductId);
+                int price = Convert.ToInt32(user.MaxAmount);
 
-            ProductBidEntity productBid = new ProductBidEntity();
-            productBid.Offer =Convert.ToDecimal(messages[1]);
-            productBid.ProductId = Convert.ToInt32(groupName);
-            productBid.RecordDate = DateTime.Now;
-            productBid.UserId = Convert.ToInt32(userInfos[0]);
-           await _productBidService.insertProductBid(productBid);
+                if(messageModel.AutoBid)
+                {
+                    if (price < messageModel.Price + sumOther)
+                    {
+                        messageModel.ResponseMessage = "you can't bid more than the amount you set";
+                        var json = new JavaScriptSerializer().Serialize(messageModel);
+                        await Clients.Group(groupName).SendAsync("ReceiveMessage", json);
+                    }
+                    else
+                    {
+                        var json = new JavaScriptSerializer().Serialize(messageModel);
+                        await Clients.Group(groupName).SendAsync("ReceiveMessage", json);
+                        _producer.PushMessageToQ(messageModel);
+                    }
+                }
+                else
+                {
+                    var json = new JavaScriptSerializer().Serialize(messageModel);
+                    await Clients.Group(groupName).SendAsync("ReceiveMessage", json);
+                            _producer.PushMessageToQ(messageModel);
+                }
+            }
+            else
+            {
+                messageModel.ResponseMessage = "Time Expired";
+                var json = new JavaScriptSerializer().Serialize(messageModel);
+                await Clients.Group(groupName).SendAsync("ReceiveMessage", json);
+
+            }
+
         }
     }
 }

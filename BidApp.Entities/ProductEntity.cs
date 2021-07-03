@@ -10,6 +10,7 @@ namespace BidApp.Entities
         public string PhotoPath { get; set; }
         public string Description { get; set; }
         public DateTime ExpireDateTime { get; set; }
+        public decimal? CurrentPrice { get; set; }
         public virtual List<ProductBidEntity> ProductBids { get; set; }
 
     }

@@ -18,7 +18,7 @@ namespace BidApp.WebApi.Controllers
         readonly IProductService _productService;
         readonly IUserService _userService;
 
-
+        private static string IMAGE_BASE_URL = "https://localhost:44382/Images/";
         public ProductController(IProductService productService, IUserService userService)
         {
             _productService = productService;
@@ -36,10 +36,11 @@ namespace BidApp.WebApi.Controllers
                 {
                     Description = product.Description,
                     Name = product.Name,
-                    PhotoPath = product.PhotoPath,
-                    StartPrice = product.StartPrice,
+                    PhotoPath = IMAGE_BASE_URL + product.PhotoPath,
+                    StartPrice = product.CurrentPrice.Value,
                     Id = product.Id,
-                    ExpireDateTime =product.ExpireDateTime
+                    ExpireDateTime =product.ExpireDateTime,
+
                 });
             }
             responseModel.SetOk(productList);
@@ -63,7 +64,7 @@ namespace BidApp.WebApi.Controllers
                 productDetail.Id = product.Id;
                 productDetail.Description = product.Description;
                 productDetail.Name = product.Name;
-                productDetail.PhotoPath = product.PhotoPath;
+                productDetail.PhotoPath = IMAGE_BASE_URL+product.PhotoPath;
                 productDetail.StartPrice = product.StartPrice;
                 productDetail.ExpireDateTime = product.ExpireDateTime;
                 foreach (var item in product.ProductBids)
@@ -71,7 +72,7 @@ namespace BidApp.WebApi.Controllers
                     productDetail.ProductBidResponses.Add(new ProductBidResponse
                     {
                         Price = item.Offer,
-                        UserName = _userService.GetUserById(item.UserId).userName,
+                        UserName = _userService.GetUserById(item.UserId).UserName,
                         RecordDate = item.RecordDate,
                         UserId=item.UserId
                     });

@@ -10,5 +10,8 @@ namespace BidApp.Service.Products
         List<ProductEntity> GetProducts();
 
         ProductEntity GetProductById(int id);
+
+        ProductEntity UpdateProduct(ProductEntity productEntity);
+
     }
 }

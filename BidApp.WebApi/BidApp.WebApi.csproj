@@ -6,6 +6,12 @@
   <PropertyGroup>
     <UseAppHost>false</UseAppHost>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Dockerfile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dockerfile" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
@@ -27,6 +33,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="3.1.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>

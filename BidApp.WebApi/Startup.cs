@@ -11,6 +11,9 @@ using BidApp.Service.Products;
 using BidApp.Service.Hubs;
 using BidApp.Service.Rabbit;
 using BidApp.Service.Users;
+using Swashbuckle.AspNetCore.Swagger;
+using BidApp.WebApi.HostedServices;
+
 
 namespace BidApp.WebApi
 {
@@ -33,8 +36,25 @@ namespace BidApp.WebApi
                     .AllowAnyHeader()
                     .WithOrigins("http://localhost:4200");
             }));
+            services.AddHostedService<ConsumeRabbitMqService>();
 
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("CoreSwagger", new Info
+                {
+                    Title = "BidApp",
+                    Version = "1.0.0",
+                    Description = "A Simple Bidd App",
+                    Contact = new Contact()
+                    {
+                        Name = "Swagger implementation by Mustafa Bas"
+
+                    },
+                    TermsOfService = "http://swagger.io/terms/"
+                });
+
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR();
             services.AddMemoryCache();
@@ -48,6 +68,7 @@ namespace BidApp.WebApi
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IProductBidService, ProductBidService>();
             services.AddScoped<BidHub>();
@@ -55,7 +76,6 @@ namespace BidApp.WebApi
 
             services.AddSingleton<IProducerService, ProducerService>();
             services.AddSingleton<IConsumerService, ConsumerService>();
-            services.AddSingleton<IUserService, UserService>();
 
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -83,7 +103,6 @@ namespace BidApp.WebApi
 
             });
 
-
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
@@ -96,7 +115,11 @@ namespace BidApp.WebApi
 
 
 
-
+            app.UseSwagger()
+ .UseSwaggerUI(c =>
+ {
+     c.SwaggerEndpoint("/swagger/CoreSwagger/swagger.json", "Swagger Test .Net Core");
+ });
 
 
             app.UseRabbitListener();

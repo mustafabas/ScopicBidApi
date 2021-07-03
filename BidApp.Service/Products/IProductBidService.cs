@@ -8,8 +8,10 @@ namespace BidApp.Service.Products
 {
     public interface IProductBidService
     {
-        Task<bool> insertProductBid(ProductBidEntity productBid);
-        List<ProductBidEntity> getProductBid(int userId, int productId);
+        Task<bool> InsertProductBid(ProductBidEntity productBid);
+        List<ProductBidEntity> GetProductBid(int userId, int productId);
+
+        decimal GetSumOfferByUserId(int userId, int currenctProductId);
 
 
     }

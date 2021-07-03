@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BidApp.DataL;
+using BidApp.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,35 +9,27 @@ namespace BidApp.Service.Users
 {
     public class UserService : IUserService
     {
-        public List<UserModel> userModels;
+        readonly IRepository<UserEntity> _userRepository;
 
-        public UserService()
+        public UserService(IRepository<UserEntity> userRepository)
         {
-            if (userModels == null)
-            {
-                userModels = new List<UserModel>();
-                userModels.Add(new UserModel
-                {
-                    userId = 1,
-                    userName = "user1"
-                });
-                userModels.Add(new UserModel
-                {
-                    userId = 2,
-                    userName = "user2"
-                });
-            }
+            this._userRepository = userRepository;
+        }  
 
+        public UserEntity GetUserById(int id)
+        {
+            return _userRepository.GetById(id);
         }
 
-        public UserModel GetUserById(int id)
+        public UserEntity GetByUserNameAndPassword(string userName, string password)
         {
-            return userModels.First(x => x.userId == id);
+            return _userRepository.ListAll().First(x => x.UserName == userName && x.Password==password);
         }
 
-        public UserModel getUserByName(string userName)
+        public UserEntity UpdateUser(UserEntity user)
         {
-            return userModels.First(x => x.userName == userName);
+            _userRepository.Update(user);
+            return user;
         }
     }
 }

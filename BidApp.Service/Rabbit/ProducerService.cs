@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using BidApp.Service.Hubs;
+using Microsoft.Extensions.Caching.Memory;
+using Nancy.Json;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -8,15 +10,8 @@ namespace BidApp.Service.Rabbit
 {
     public class ProducerService : IProducerService
     {
-        private int _messageCount = 1;
-        private readonly IMemoryCache _memoryCache;
-
-        public ProducerService(IMemoryCache memoryCache)
-        {
-            _memoryCache = memoryCache;
-        }
-
-        public bool PushMessageToQ()
+ 
+        public bool PushMessageToQ(MessageModel model)
         {
             try
             {
@@ -25,23 +20,33 @@ namespace BidApp.Service.Rabbit
                 {
                     using (var channel = connection.CreateModel())
                     {
-                        channel.QueueDeclare(queue: "counter",
+                        /*channel.QueueDeclare(queue: "bidMessage",
                                      durable: true,
                                      exclusive: false,
                                      autoDelete: false,
                                      arguments: null);
 
-                        var message = $"Message {_messageCount++}";
 
-                        Dictionary<string, int> messages = null;
-                        _memoryCache.TryGetValue<Dictionary<string, int>>("messages", out messages);
-                        if (messages == null) messages = new Dictionary<string, int>();
-                        messages.Add(message, _messageCount);
-                        _memoryCache.Set<Dictionary<string, int>>("messages", messages);
+              
+                        var messageBody = Encoding.UTF8.GetBytes(json);
 
-                        var messageBody = Encoding.UTF8.GetBytes(message);
+                        channel.BasicPublish(exchange: "bidMessage", routingKey: "bidMessage", body: messageBody, basicProperties: null);*/
 
-                        channel.BasicPublish(exchange: "counter", routingKey: "counter", body: messageBody, basicProperties: null);
+
+                        channel.QueueDeclare(queue: "bid.app.amounts",
+                           durable: true,
+                           exclusive: false,
+                           autoDelete: false,
+                           arguments: null);
+
+                        var json = new JavaScriptSerializer().Serialize(model);
+                        var body = Encoding.UTF8.GetBytes(json);
+
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "bid.app.amounts",
+                                             basicProperties: null,
+                                             body: body);
+                        Console.WriteLine(" [x] Sent {0}", json);
                     }
                 }
 
