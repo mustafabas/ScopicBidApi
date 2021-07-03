@@ -7,6 +7,9 @@ Database is used with remote connection.
 
 After you run the project, you can see endpoints on https://localhost:44382/swagger.
 
+Thank you in advance.
+
+
 
 
 
