@@ -75,8 +75,6 @@ namespace BidApp.WebApi
 
 
             services.AddSingleton<IProducerService, ProducerService>();
-            services.AddSingleton<IConsumerService, ConsumerService>();
-
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
@@ -112,17 +110,12 @@ namespace BidApp.WebApi
             });
 
 
-
-
-
             app.UseSwagger()
  .UseSwaggerUI(c =>
  {
      c.SwaggerEndpoint("/swagger/CoreSwagger/swagger.json", "Swagger Test .Net Core");
  });
 
-
-            app.UseRabbitListener();
         }
 
 
