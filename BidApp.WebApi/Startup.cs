@@ -58,7 +58,7 @@ namespace BidApp.WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR();
             services.AddMemoryCache();
-            var data = Configuration.GetConnectionString("LunchSConnection");
+            var data = Configuration.GetConnectionString("BidAppConnection");
 
             services.AddDbContext<BidAppContext>(
                 b => b.UseLazyLoadingProxies()
